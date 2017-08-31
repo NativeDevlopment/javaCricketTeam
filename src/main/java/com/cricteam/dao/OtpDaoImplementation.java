@@ -1,4 +1,4 @@
-package com.cricteam.models;
+package com.cricteam.dao;
 
 import java.util.Date;
 
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cricteam.models.Otp;
 import com.cricteam.repository.OtpRepository;
 
 @Service("otpDao")
