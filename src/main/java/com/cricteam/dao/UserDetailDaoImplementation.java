@@ -33,7 +33,7 @@ public class UserDetailDaoImplementation implements UserDetailDao {
 	@Override
 	public UserDetails getUserViaMobileNo(String mobileNo) {
 		// TODO Auto-generated method stub
-		return null;
+		return userRepository.getUserByPhone(mobileNo);
 	}
 	@Override
 	public UserDetails updateUser(UserDetails userDetails, String userId) {

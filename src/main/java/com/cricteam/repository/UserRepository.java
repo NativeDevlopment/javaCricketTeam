@@ -11,15 +11,12 @@ import com.cricteam.models.UserDetails;
 public interface UserRepository<T> extends UserBaseRepository<UserDetails>,JpaRepository<UserDetails, String> {
 
 
-	@Modifying(clearAutomatically = true)
 	@Query("select u from UserDetails u where u.userId =:mid  ")
 	UserDetails getUserById(@Param("mid") String mid);
-	@Modifying(clearAutomatically = true)
 	@Query("select u from UserDetails u where u.userEmail =:mid")
 	UserDetails getUserByEMail(@Param("mid") String mid);
 
 	
-	@Modifying(clearAutomatically = true)
 	@Query("select u from UserDetails u where u.mobileNo =:mobileNo")
 	UserDetails getUserByPhone(@Param("mobileNo")String mobileNo);
 	

@@ -57,15 +57,22 @@ public class OtpController {
 	    try {
 	      isNumberVerified = otpService.verifyOtp(verifyOtp);
 	      if(isNumberVerified){
-	    	  UserDetails userdetail= new UserDetails();
-	    	  userdetail.setMobileNo(verifyOtp.getMobileNo());
-	    	  userdetail.setDeviceId(verifyOtp.getDeviceId());
-	    	  userdetail.setDeviceToken(verifyOtp.getDeviceToken());
-	    	  userdetail.setDeviceType(verifyOtp.getDeviceType());
-
-	    	  response.data=  userdetailService.saveUser(userdetail);
-	    	  response.statusCode=HttpURLConnection.HTTP_OK;
-		      response.message="Number Verified SuccessFully";
+	    	  UserDetails details=userdetailService.getUserViaMobileNo(verifyOtp.getMobileNo());
+	    	  	if(details!=null&&details.getUserId()!=0){
+	    	  		 response.data= details;
+		   	    	  response.statusCode=HttpURLConnection.HTTP_OK;
+		   		      response.message="Number Verified SuccessFully";
+	    	  	}else{
+	    	  		 UserDetails userdetail= new UserDetails();
+	   	    	  userdetail.setMobileNo(verifyOtp.getMobileNo());
+	   	    	  userdetail.setDeviceId(verifyOtp.getDeviceId());
+	   	    	  userdetail.setDeviceToken(verifyOtp.getDeviceToken());
+	   	    	  userdetail.setDeviceType(verifyOtp.getDeviceType());
+	   	    	  response.data=  userdetailService.saveUser(userdetail);
+	   	    	  response.statusCode=HttpURLConnection.HTTP_OK;
+	   		      response.message="Number Verified SuccessFully";
+	    	  	}
+	    	 
 
 	      }else{
 	    	  response.data=null;
