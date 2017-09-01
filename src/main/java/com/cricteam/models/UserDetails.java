@@ -47,6 +47,9 @@ public class UserDetails {
 	@Column(name="user_email")
 	private String userEmail;
 	
+	public UserDetails(){
+		
+	}
 	
 	public UserDetails(int userId, String mobileNo, String deviceId, String deviceToken, String deviceType, String name, String userLat, String userLong, String userAddress, String userImageUrl, String userEmail ) {
 		super();

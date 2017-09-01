@@ -59,7 +59,9 @@ public class Otp {
 	@Column(name="created_time")
 	private String created_time;
 	
+	public Otp(){
 	
+	}
 	public Otp(String mobileNo, String otp, String created_time) {
 		super();
 		this.mobileNo = mobileNo;

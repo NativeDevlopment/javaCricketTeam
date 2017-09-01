@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.cricteam.dao.OtpDao;
 import com.cricteam.dao.OtpDaoImplementation;
 import com.cricteam.models.Otp;
+import com.cricteam.models.VerifyOtp;
 @Service("otpService")
 @Repository
 public class OtpServiceImplementation implements OtpService {
@@ -16,6 +17,11 @@ OtpDao otpDao;
 	public String saveOtp(Otp otp) {
 		// TODO Auto-generated method stub
 		return otpDao.saveOtp(otp);
+	}
+	@Override
+	public boolean verifyOtp(VerifyOtp verifyOtp) {
+		// TODO Auto-generated method stub
+		return otpDao.verifyOtp(verifyOtp);
 	}
 
 }

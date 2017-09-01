@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cricteam.models.Otp;
+import com.cricteam.models.VerifyOtp;
 import com.cricteam.repository.OtpRepository;
 
 @Service("otpDao")
@@ -54,5 +55,15 @@ public class OtpDaoImplementation implements OtpDao {
 		}
 		
 		return code;
+	}
+	@Override
+	public boolean verifyOtp(VerifyOtp verifyOtp) {
+		// TODO Auto-generated method stub
+	Otp otp=	otprepository.getOtpViaMobileNo(verifyOtp.getMobileNo());
+	if(otp!=null){
+	if(verifyOtp.getMobileNo().equalsIgnoreCase(otp.getMobileNo())&&verifyOtp.getOtp().equalsIgnoreCase(otp.getOtp())){
+	return true;	
+	}}
+		return false;
 	}
 }
