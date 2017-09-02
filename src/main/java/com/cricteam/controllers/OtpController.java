@@ -33,10 +33,8 @@ public class OtpController {
 	    try {
 	      otp = new Otp(mobileNo,"","");
 	      code = otpService.saveOtp(otp);
-	      otp.setOtp(code);
 	      response.statusCode=HttpURLConnection.HTTP_OK;
 	      response.message="Otp sucessfully sent to Mobile no";
-	      response.data=otp;
 	    }
 	    catch (Exception ex) {
 	    	 response.statusCode=HttpURLConnection.HTTP_INTERNAL_ERROR;
