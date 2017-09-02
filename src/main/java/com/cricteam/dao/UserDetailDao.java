@@ -1,6 +1,5 @@
 package com.cricteam.dao;
 
-import com.cricteam.models.Otp;
 import com.cricteam.models.UserDetails;
 
 public interface UserDetailDao {

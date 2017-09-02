@@ -1,7 +1,5 @@
 package com.cricteam.dao;
 
-import java.util.Date;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -10,10 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.cricteam.models.Otp;
 import com.cricteam.models.UserDetails;
-import com.cricteam.models.VerifyOtp;
-import com.cricteam.repository.OtpRepository;
 import com.cricteam.repository.UserRepository;
 
 @Service("userDetailDao")

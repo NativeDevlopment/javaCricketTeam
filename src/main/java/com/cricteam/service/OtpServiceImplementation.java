@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.cricteam.dao.OtpDao;
-import com.cricteam.dao.OtpDaoImplementation;
 import com.cricteam.models.Otp;
 import com.cricteam.models.VerifyOtp;
 @Service("otpService")

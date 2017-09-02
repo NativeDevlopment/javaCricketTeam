@@ -90,4 +90,48 @@ public class OtpController {
 	    }
 	    return response;
 	  }
+	 
+	 /*@RequestMapping(value="/updateUser",method = RequestMethod.POST, produces = "application/json")
+		
+	 public Response updateUser(@RequestBody VerifyOtp verifyOtp) {
+		 
+		Response response= new Response();
+	    boolean isNumberVerified;
+	    if(verifyOtp.getMobileNo().length()>10){
+	    try {
+	      isNumberVerified = otpService.verifyOtp(verifyOtp);
+	      if(isNumberVerified){
+	    	  UserDetails details=userdetailService.getUserViaMobileNo(verifyOtp.getMobileNo());
+	    	  	if(details!=null&&details.getUserId()!=0){
+	    	  		 response.data= details;
+		   	    	  response.statusCode=HttpURLConnection.HTTP_OK;
+		   		      response.message="Number Verified SuccessFully";
+	    	  	}else{
+	    	  		UserDetails userdetail= new UserDetails();
+	   	    	  userdetail.setMobileNo(verifyOtp.getMobileNo());
+	   	    	  userdetail.setDeviceId(verifyOtp.getDeviceId());
+	   	    	  userdetail.setDeviceToken(verifyOtp.getDeviceToken());
+	   	    	  userdetail.setDeviceType(verifyOtp.getDeviceType());
+	   	    	  response.data=  userdetailService.saveUser(userdetail);
+	   	    	  response.statusCode=HttpURLConnection.HTTP_OK;
+	   		      response.message="Number Verified SuccessFully";
+	    	  	}
+	    	 
+
+	      }else{
+	    	  response.data=null;
+	    	  response.statusCode=HttpURLConnection.HTTP_UNAUTHORIZED;
+		      response.message="Number Verification Failed";
+	      }
+	    
+	    }
+	    catch (Exception ex) {
+	    	 response.statusCode=HttpURLConnection.HTTP_INTERNAL_ERROR;
+		      response.message="Internal server error";
+	    }}else{
+	    	 response.statusCode=HttpURLConnection.HTTP_LENGTH_REQUIRED;
+		      response.message="field required";
+	    }
+	    return response;
+	  }*/
 }
