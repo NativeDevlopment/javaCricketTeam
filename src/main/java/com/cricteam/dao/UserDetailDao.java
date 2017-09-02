@@ -7,4 +7,5 @@ public interface UserDetailDao {
 	UserDetails getUserViaUserId(String userId);
 	UserDetails getUserViaMobileNo(String mobileNo);
 	UserDetails updateUser(UserDetails userDetails, String userId);
+	UserDetails updateUserDetails(UserDetails userDetails);
 }

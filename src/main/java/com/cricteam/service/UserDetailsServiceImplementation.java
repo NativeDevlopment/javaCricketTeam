@@ -35,4 +35,10 @@ UserDetailDao userdetailDao;
 		return userdetailDao.updateUser(userDetails, userId);
 	}
 
+	@Override
+	public UserDetails updateUserDetails(UserDetails userDetails) {
+		// TODO Auto-generated method stub
+		return userdetailDao.updateUserDetails(userDetails);
+	}
+
 }

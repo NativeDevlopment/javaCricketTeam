@@ -6,18 +6,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name="user_details")
+@Table(name="user_details", uniqueConstraints = @UniqueConstraint(name = "uk_user_mobile_no", columnNames = "mobileNo"))
 public class UserDetails {
-
+	
 	@Id
 	@Column(name="user_id")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int userId;
 	
-	@Column(name="mobileNo")
 	private String mobileNo;
 	
 	@Column(name="device_id")

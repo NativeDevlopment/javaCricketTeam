@@ -10,7 +10,7 @@ import com.cricteam.models.TeamDetails;
 
 public interface TeamDetailsRepository<T> extends TeamDetailsBaseRepository<TeamDetails>,JpaRepository<TeamDetails, String> {
 
-	@Query("select t from TeamDetails t where t.userId =:mid  and t.teamId=:tid")
+	@Query("select t from TeamDetails t where t.userDetails.userId =:mid  and t.teamId=:tid")
 	TeamDetails getTeamDetailsById(@Param("mid") String mid,@Param ("tid") String tid);
 	@Query("select t from TeamDetails t where t.teamLat =:teamLat and t.teamLong=:teamLong")
 	List<TeamDetails> findTeamViaLatLong(@Param("teamLat") String teamLat ,@Param("teamLong") String teamLong);
