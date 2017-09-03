@@ -48,7 +48,11 @@ public class UserDetailDaoImplementation implements UserDetailDao {
 	@Override
 	public UserDetails updateUserDetails(UserDetails userDetails) {
 		try{
-			UserDetails userDetail= (UserDetails)entityManager.find(UserDetails.class ,1);
+			entityManager.createNativeQuery("update user_details ud set ud.mobile_no = '"+userDetails.getMobileNo()+"', ud.device_id = '"+userDetails.getDeviceId()+
+					"', ud.device_token = '"+userDetails.getDeviceToken()+"', ud.device_type = '"+userDetails.getDeviceType()+"', ud.name = '"+userDetails.getName()+
+					"', ud.user_address = '"+userDetails.getUserAddress()+"', ud.user_email = '"+userDetails.getUserEmail()+"', ud.user_image_url = '"+userDetails.getUserImageUrl()+
+					"', ud.user_lat = '"+userDetails.getUserLat()+"', ud.user_long = '"+userDetails.getUserLong()+"'  where ud.user_id="+userDetails.getUserId()).setParameter("userDetails", "userDetails").executeUpdate();
+			/*UserDetails userDetail= (UserDetails)entityManager.find(UserDetails.class ,1);
 			Session session = (Session) entityManager.find(UserDetails.class, 1);
 			userDetail.
 			EntityTransaction tx = entityManager.getTransaction();
@@ -56,7 +60,7 @@ public class UserDetailDaoImplementation implements UserDetailDao {
 			session.saveOrUpdate(userDetails);
 			System.out.println("Data saved into the DB. ID - "+userDetails.getUserId());
 			session.getTransaction().commit();
-			session.close();
+			session.close();*/
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
