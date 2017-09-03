@@ -1,6 +1,5 @@
 package com.cricteam.dao;
 
-import com.cricteam.models.Otp;
 import com.cricteam.models.UserDetails;
 
 public interface UserDetailDao {
@@ -8,4 +7,5 @@ public interface UserDetailDao {
 	UserDetails getUserViaUserId(String userId);
 	UserDetails getUserViaMobileNo(String mobileNo);
 	UserDetails updateUser(UserDetails userDetails, String userId);
+	UserDetails updateUserDetails(UserDetails userDetails);
 }
