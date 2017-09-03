@@ -1,13 +1,17 @@
 package com.cricteam.models;
 
 import javax.persistence.Column;
+import javax.persistence.ColumnResult;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PostLoad;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
 
 
 @Entity
@@ -30,19 +34,29 @@ public class TeamDetails {
 	private String teamDesc;
 	
 	@Column(name="team_lat")
-	private String teamLat;
+	private double teamLat;
 	
 	@Column(name="team_long")
-	private String teamLong;
+	private double teamLong;
 	
 	@Column(name="team_address")
 	private String teamAddress;
 	
 	@Column(name="team_logo_url")
 	private String teamLogoUrl;
+	  @Transient
+	    private double distance;
+	 
 	
-	
-	public TeamDetails(int teamId, UserDetails userDetails, String teamName, String teamDesc, String teamLat, String teamLong, String teamAddress, String teamLogoUrl ) {
+	public double getDistance() {
+			return distance;
+		}
+
+		public void setDistance(double distance) {
+			this.distance = distance;
+		}
+
+	public TeamDetails(int teamId, UserDetails userDetails, String teamName, String teamDesc, double teamLat, double teamLong, String teamAddress, String teamLogoUrl ) {
 		super();
 		this.teamId = teamId;
 		this.userDetails = userDetails;
@@ -53,13 +67,15 @@ public class TeamDetails {
 		this.teamAddress = teamAddress;
 		this.teamLogoUrl = teamLogoUrl;
 	}
-
+public TeamDetails(){
+	
+}
 
 	@Override
 	public String toString(){
 		 return "{teamId:" + teamId + ", userDetails:" + userDetails + ", teamName:"
 				+ teamName + ", teamDesc:" + teamDesc + ", teamLat:" 
-				+ teamLat + ", teamAddress:" + teamAddress + ", teamLong:"+ teamLong +", teamLogoUrl:" + teamLogoUrl + "}";
+				+ teamLat + ", teamAddress:" + teamAddress + ", teamLong:"+ teamLong +", teamLogoUrl:" + teamLogoUrl +", distance: "+distance+"}";
 	}
 
 
@@ -130,7 +146,7 @@ public class TeamDetails {
 	/**
 	 * @return the teamLat
 	 */
-	public String getTeamLat() {
+	public double getTeamLat() {
 		return teamLat;
 	}
 
@@ -138,7 +154,7 @@ public class TeamDetails {
 	/**
 	 * @param teamLat the teamLat to set
 	 */
-	public void setTeamLat(String teamLat) {
+	public void setTeamLat(double teamLat) {
 		this.teamLat = teamLat;
 	}
 
@@ -146,7 +162,7 @@ public class TeamDetails {
 	/**
 	 * @return the teamLong
 	 */
-	public String getTeamLong() {
+	public double getTeamLong() {
 		return teamLong;
 	}
 
@@ -154,7 +170,7 @@ public class TeamDetails {
 	/**
 	 * @param teamLong the teamLong to set
 	 */
-	public void setTeamLong(String teamLong) {
+	public void setTeamLong(double teamLong) {
 		this.teamLong = teamLong;
 	}
 
