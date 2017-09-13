@@ -1,5 +1,8 @@
 package com.cricteam.models;
 
+import java.io.Serializable;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ColumnResult;
 import javax.persistence.Entity;
@@ -9,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PostLoad;
+import javax.persistence.Query;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -16,14 +20,20 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name="team_details")
-public class TeamDetails {
+
+public class TeamDetails implements Serializable {
+
+	/**
+	 *  team details class for team information
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name="team_id")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int teamId;
 	
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL })
 	@JoinColumn(name="userId")
 	private UserDetails userDetails;
 	
@@ -38,15 +48,16 @@ public class TeamDetails {
 	
 	@Column(name="team_long")
 	private double teamLong;
-	
+
+	@Transient
+	private double distance;
 	@Column(name="team_address")
 	private String teamAddress;
 	
 	@Column(name="team_logo_url")
 	private String teamLogoUrl;
-	  @Transient
-	    private double distance;
-	 
+	
+	
 	
 	public double getDistance() {
 			return distance;
@@ -205,4 +216,9 @@ public TeamDetails(){
 	public void setTeamLogoUrl(String teamLogoUrl) {
 		this.teamLogoUrl = teamLogoUrl;
 	}
+	
+
+		  
+
+	
 }

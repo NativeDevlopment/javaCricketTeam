@@ -1,15 +1,23 @@
 package com.cricteam.models;
 
 public class FindTeamRequest {
-String userId;
+int userId;
+int teamId;
+
+public int getTeamId() {
+	return teamId;
+}
+public void setTeamId(int teamId) {
+	this.teamId = teamId;
+}
 String latitude;
 String longitude;
 int pageNo;
 int pageSize;
-public String getUserId() {
+public int getUserId() {
 	return userId;
 }
-public void setUserId(String userId) {
+public void setUserId(int userId) {
 	this.userId = userId;
 }
 public String getLatitude() {

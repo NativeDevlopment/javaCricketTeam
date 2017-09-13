@@ -12,6 +12,11 @@ import javax.persistence.Table;
 @Table(name="player_type")
 public class PlayerTypes {
 
+	public PlayerTypes() {
+		
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id
 	@Column(name="player_type_id")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

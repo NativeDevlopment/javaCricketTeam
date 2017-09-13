@@ -10,7 +10,7 @@ import com.cricteam.models.UserDetails;
 public interface UserRepository<T> extends UserBaseRepository<UserDetails>,JpaRepository<UserDetails, String> {
 
 	@Query("select u from UserDetails u where u.userId =:mid  ")
-	UserDetails getUserById(@Param("mid") String mid);
+	UserDetails getUserById(@Param("mid") int mid);
 	
 	@Query("select u from UserDetails u where u.userEmail =:mid")
 	UserDetails getUserByEMail(@Param("mid") String mid);

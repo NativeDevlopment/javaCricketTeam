@@ -1,5 +1,6 @@
 package com.cricteam.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +20,13 @@ public class PlayerDetails {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int playerId;
 	
-	@ManyToOne
+	public PlayerDetails() {
+		
+		// TODO Auto-generated constructor stub
+	}
+
+
+	@ManyToOne(cascade = {CascadeType.ALL })
 	@JoinColumn(name="teamId")
 	private TeamDetails teamDetails;
 	
@@ -32,7 +39,7 @@ public class PlayerDetails {
 	@Column(name="player_image_url")
 	private String playerImageUrl;
 	
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL })
 	@JoinColumn(name="playerTypeId")
 	private PlayerTypes playerTypes;
 	

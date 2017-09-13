@@ -18,7 +18,7 @@ UserDetailDao userdetailDao;
 	}
 
 	@Override
-	public UserDetails getUserViaUserId(String userId) {
+	public UserDetails getUserViaUserId(int userId) {
 		// TODO Auto-generated method stub
 		return userdetailDao.getUserViaUserId(userId);
 	}

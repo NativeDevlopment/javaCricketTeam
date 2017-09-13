@@ -2,12 +2,15 @@ package com.cricteam.dao;
 
 import java.util.List;
 
+import com.cricteam.models.FindTeamRequest;
+import com.cricteam.models.SearchTeam;
 import com.cricteam.models.TeamDetails;
 
 public interface TeamDetailsDao {
 
 TeamDetails saveTeam(TeamDetails teamDetails);
-TeamDetails getTeamViaTeamId(String userId,String teamId);
+TeamDetails getTeamViaTeamId(int userId,int teamId);
 TeamDetails deleteTeam(String userId,String teamId);
-List<TeamDetails> findTeamViaLatLong(String lattiude ,String Longitude);
+List<SearchTeam> findTeamViaLatLong(String lattiude ,String Longitude,int page_No,int pageSize);
+List<SearchTeam> findTeamViaLatLong(FindTeamRequest teamRequst, String latitude, String longitude, int pageNo,int pageSize);
 }
