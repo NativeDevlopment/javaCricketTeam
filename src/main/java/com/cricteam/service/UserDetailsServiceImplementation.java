@@ -9,8 +9,8 @@ import com.cricteam.models.UserDetails;
 @Service("userDetailService")
 @Repository
 public class UserDetailsServiceImplementation implements UserDetailService {
-@Autowired
-UserDetailDao userdetailDao;
+	@Autowired
+	UserDetailDao userdetailDao;
 	@Override
 	public UserDetails saveUser(UserDetails otp) {
 		// TODO Auto-generated method stub
