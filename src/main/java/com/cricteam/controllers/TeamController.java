@@ -1,5 +1,12 @@
 package com.cricteam.controllers;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
+
 import org.apache.commons.httpclient.util.HttpURLConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,18 +15,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.cricteam.TeamCircleStatusEnum;
 import com.cricteam.models.AddPlayerRequest;
 import com.cricteam.models.FindTeamRequest;
-import com.cricteam.models.Otp;
 import com.cricteam.models.Response;
+import com.cricteam.models.TeamCircle;
+import com.cricteam.models.TeamCircleRequest;
 import com.cricteam.models.TeamDetails;
 import com.cricteam.models.TeamRequest;
 import com.cricteam.models.UserDetails;
-import com.cricteam.models.VerifyOtp;
 import com.cricteam.service.AddPlayerService;
+import com.cricteam.service.PredefinedService;
+import com.cricteam.service.TeamCircleService;
 import com.cricteam.service.TeamService;
 import com.cricteam.service.UserDetailService;
+import com.google.gson.JsonObject;
 
 @RestController
 @Controller
@@ -27,7 +37,10 @@ public class TeamController {
 	@Autowired TeamService teamService;
 	@Autowired UserDetailService userService;
 	@Autowired AddPlayerService addplayerService;
-
+	@Autowired TeamCircleService teamCircleService;
+	@Autowired PredefinedService predefinedService;
+	public final  String AUTH_KEY_FCM = "AAAAZklwOYU:APA91bHBXgKU9GEd-dr5SPNAplf6sDMxap8LloEj4VelASsaDgcHa7yKUx-w05SVwilhJx00_z_3QqF5Xnikw38aBrz1ISDdaLO_iN-HQlitwCrxWoB5unoVk8Gxxak-wBxIdqt19KGC";
+    public final  String API_URL_FCM = "https://fcm.googleapis.com/fcm/send";
 	 @RequestMapping(value="/findTeam",method = RequestMethod.POST, produces = "application/json")
 	  @ResponseBody
 	  public Response findTeamViaLatLong(@RequestBody FindTeamRequest teamRequst,int pageNo,int pageSize) {
@@ -108,24 +121,99 @@ public class TeamController {
 	    }
 	    return response;
 	  }
-	 @RequestMapping(value="/sendTeamRequest",method = RequestMethod.POST, produces = "application/json")
+	 @RequestMapping(value="/teamRequest",method = RequestMethod.POST, produces = "application/json")
 		
-	 public Response sendTeamRequest(int teamId,int userId) {
+	 public Response sendTeamRequest(@RequestBody TeamCircleRequest circleRequest) {
 		 Response response= new Response();
+		 JsonObject data = new JsonObject();
 	    try {
 	    	 response.statusCode=HttpURLConnection.HTTP_OK;
 	    	 response.message="sucess";
+	    	 TeamCircle  teamCircle= new TeamCircle();
+	    	 if(circleRequest.getRequestId()!=0){
+		    	 teamCircle=teamCircleService.getTeamCircleDetails(circleRequest.getRequestId());
+		    	 if(circleRequest.getRequestAction().equalsIgnoreCase(TeamCircleStatusEnum.ACCEPT.name())){
+		    	 if(teamCircle.getTeamReceiverId().getTeamId()==circleRequest.getReceiverId()){
+		    		
+		    		 if(circleRequest.getRequestAction().equalsIgnoreCase(TeamCircleStatusEnum.ACCEPT.name())){
+		    			 teamCircle.setTeamCircleStatusId(predefinedService.findCircleStatus(TeamCircleStatusEnum.ACCEPT.name())); 
+		    			 response.data=teamCircleService.sendRequest(teamCircle);
+		    			 data.addProperty("to", teamCircle.getTeamSenderId().getUserDetails().getDeviceToken());
+		    		        JsonObject info = new JsonObject();
+		    		        info.addProperty("name", teamCircle.getTeamReceiverId().getTeamName()); // Notification title
+		    		        info.addProperty("message", "Ready to  start talk with you .");
+		    		        info.addProperty("imageUrl",  teamCircle.getTeamReceiverId().getTeamLogoUrl());
+		    		        info.addProperty("requestId",  teamCircle.getTeamCircleId());
+		    		        info.addProperty("receiverTeamId",  teamCircle.getTeamReceiverId().getTeamId());
+		    		        info.addProperty("type", "accept");
+		    		        info.addProperty("receiverUserId",  teamCircle.getTeamReceiverId().getUserDetails().getUserId());// Notification body
+		    		        data.add("data", info);
+		    		 }
+		    		 
+		    	 }else{
+		    		 response.statusCode=HttpURLConnection.HTTP_NOT_AUTHORITATIVE;
+			    	 response.message="your team acceptance id mismatch";
+		    	 }
+		    	 }else  if(circleRequest.getRequestAction().equalsIgnoreCase(TeamCircleStatusEnum.REJECT.name()))
+		    	 {
+		    		 if(teamCircle.getTeamReceiverId().getTeamId()==circleRequest.getReceiverId()){
+				    		
+			    		
+			    			 teamCircle.setTeamCircleStatusId(predefinedService.findCircleStatus(TeamCircleStatusEnum.REJECT.name())); 
+			    			 response.data=teamCircleService.sendRequest(teamCircle);
+			    		 
+			    		 
+			    	 }else{
+			    		 response.statusCode=HttpURLConnection.HTTP_NOT_AUTHORITATIVE;
+				    	 response.message="your team acceptance id mismatch";
+			    	 }
+		    	
+		    	 }
+		    	 }else{
+	    	
+	    	 if(circleRequest.getReceiverId()!=0 && circleRequest.getReceiverUserId()!=0){
+	    		 teamCircle.setTeamReceiverId(teamService.getTeamViaTeamId(circleRequest.getReceiverUserId(), circleRequest.getReceiverId()));
+	    	 }
+	    	 if(circleRequest.getSenderId()!=0 && circleRequest.getSenderUserId()!=0){
+	    		 teamCircle.setTeamSenderId(teamService.getTeamViaTeamId(circleRequest.getSenderUserId(), circleRequest.getSenderId()));
+	    	 }
+	    	 if(circleRequest.getRequestAction()!=null)
+	    	 {
+	    		 if(circleRequest.getRequestAction().equalsIgnoreCase(TeamCircleStatusEnum.SEND.name())){
+	    			 teamCircle.setTeamCircleStatusId(predefinedService.findCircleStatus(TeamCircleStatusEnum.SEND.name())); 
+	    		TeamCircle result=	 teamCircleService.sendRequest(teamCircle);
+	    			 response.data=result;
+	    		        data.addProperty("to", result.getTeamReceiverId().getUserDetails().getDeviceToken());
+	    		        JsonObject info = new JsonObject();
+	    		        info.addProperty("name", result.getTeamSenderId().getTeamName()); // Notification title
+	    		        info.addProperty("message", "Requested to want play match");
+	    		        info.addProperty("imageUrl",  result.getTeamSenderId().getTeamLogoUrl());
+	    		        info.addProperty("requestId",  result.getTeamCircleId());
+	    		        info.addProperty("senderTeamId",  result.getTeamSenderId().getTeamId());
+	    		        info.addProperty("type", "request");
+	    		        info.addProperty("senderUserId",  result.getTeamSenderId().getUserDetails().getUserId());// Notification body
+	    		        data.add("data", info);
+	    		 }
+	    	 }
+	    	
+		    	 } 
 	    	 
-	    	 response.data=teamService.getTeamViaTeamId(userId, teamId);
 	   }  
 	    
-	    
+	   
 	    catch (Exception ex) {
 	    	 response.statusCode=HttpURLConnection.HTTP_INTERNAL_ERROR;
 		      response.message="Internal server error";
 	    }
+	    try {
+			pushFCMNotification(data.toString());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	    return response;
 	  }
+
 	 /**
 		 * Add player controller for add player to team , check player details and team details class inside model package 
 		 * exception come  Caused by: org.hibernate.PersistentObjectException: detached entity passed to persist: com.cricteam.models.TeamDetails
@@ -166,4 +254,44 @@ request :- {
 	    }
 	    return response;
 	  }
+	 
+	 
+	 
+	 public  void pushFCMNotification(String data) throws Exception {
+
+	        String authKey = AUTH_KEY_FCM; // You FCM AUTH key
+	        String FMCurl = API_URL_FCM;
+
+	        URL url = new URL(FMCurl);
+	        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+
+	        conn.setUseCaches(false);
+	        conn.setDoInput(true);
+	        conn.setDoOutput(true);
+
+	        conn.setRequestMethod("POST");
+	        conn.setRequestProperty("Authorization", "key=" + authKey);
+	        conn.setRequestProperty("Content-Type", "application/json");
+	        	
+	        	
+
+	        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+	        wr.write(data);
+	        wr.flush();
+	        wr.close();
+
+	        int responseCode = conn.getResponseCode();
+	        System.out.println("Response Code : " + responseCode);
+
+	        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	        String inputLine;
+	        StringBuffer response = new StringBuffer();
+
+	        while ((inputLine = in.readLine()) != null) {
+	            response.append(inputLine);
+	        }
+	        in.close();
+
+	    }
+
 }

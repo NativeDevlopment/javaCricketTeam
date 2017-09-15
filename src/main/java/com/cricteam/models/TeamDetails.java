@@ -33,7 +33,7 @@ public class TeamDetails implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int teamId;
 	
-	@ManyToOne(cascade = {CascadeType.ALL })
+	@ManyToOne
 	@JoinColumn(name="userId")
 	private UserDetails userDetails;
 	

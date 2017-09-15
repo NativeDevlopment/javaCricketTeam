@@ -38,5 +38,10 @@ PlayerTypeRepository playerTypeRepository;
 		// TODO Auto-generated method stub
 		return playerTypeRepository.findAll().size();
 	}
+	@Override
+	public TeamCircleStatusType findCircleStatus(String action) {
+		// TODO Auto-generated method stub
+		return teamcircleStatusrepository.getTeamCircleStatus(action);
+	}
 
 }

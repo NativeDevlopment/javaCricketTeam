@@ -14,7 +14,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name="player_details")
 public class PlayerDetails {
-
+	/**
+	 *  player details class for add player to team
+	 */
 	@Id
 	@Column(name="player_id")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -26,7 +28,7 @@ public class PlayerDetails {
 	}
 
 
-	@ManyToOne(cascade = {CascadeType.ALL })
+	@ManyToOne
 	@JoinColumn(name="teamId")
 	private TeamDetails teamDetails;
 	
@@ -39,19 +41,21 @@ public class PlayerDetails {
 	@Column(name="player_image_url")
 	private String playerImageUrl;
 	
-	@ManyToOne(cascade = {CascadeType.ALL })
+	@ManyToOne
 	@JoinColumn(name="playerTypeId")
 	private PlayerTypes playerTypes;
 	
 	@Column(name="leader_ship")
 	private String leaderShip;
 	
-	public PlayerDetails(int playerId, TeamDetails teamDetails, PlayerTypes playerTypes, String playerName, String playerMobile, String playerImageUrl) {
+	public PlayerDetails(int playerId, TeamDetails teamDetails, PlayerTypes playerTypes, String playerName, String playerMobile, String playerImageUrl,String leaderShip) {
 		super();
 		this.playerId = playerId;
 		this.teamDetails = teamDetails;
 		this.playerName = playerName;
 		this.playerTypes = playerTypes;
+		this.leaderShip = leaderShip;
+		this.playerImageUrl=playerImageUrl;
 	}
 
 
@@ -59,7 +63,17 @@ public class PlayerDetails {
 	public String toString(){
 		 return "{playerId:" + playerId + ", teamDetails:"
 				+ teamDetails + ", playerName:" + playerName + ", playerMobile:" 
-				+ playerMobile + ", playerImageUrl:" + playerImageUrl + ", playerTypes:" + playerTypes +"}";
+				+ playerMobile + ", playerImageUrl:" + playerImageUrl + ", leaderShip:" + leaderShip +", playerTypes:" + playerTypes +"}";
+	}
+
+
+	public String getLeaderShip() {
+		return leaderShip;
+	}
+
+
+	public void setLeaderShip(String leaderShip) {
+		this.leaderShip = leaderShip;
 	}
 
 

@@ -20,5 +20,10 @@ AddPlayerRepository addPlayerRepository;
 				List<PlayerDetails> list=addPlayerRepository.save(playerList);
 				return list;
 	}
+	@Override
+	public PlayerDetails addPlayer(PlayerDetails playerDetail) {
+		// TODO Auto-generated method stub
+		return addPlayerRepository.save(playerDetail);
+	}
 
 }
