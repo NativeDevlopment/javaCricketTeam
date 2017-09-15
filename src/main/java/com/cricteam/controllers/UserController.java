@@ -48,7 +48,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value="/getUser",method = RequestMethod.GET, produces = "application/json")
-	public UserDetails updateUser(int userId) {
+	public UserDetails getUser(int userId) {
 		if(userId == 0) {
 			throw new ResourceNotFroundException("User not found with this id");
 		}
