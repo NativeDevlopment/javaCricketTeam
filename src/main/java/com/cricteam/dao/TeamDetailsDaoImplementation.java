@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import com.cricteam.TeamCircleStatusEnum;
 import com.cricteam.models.FindTeamRequest;
+import com.cricteam.models.FullTeamDetails;
+import com.cricteam.models.PlayerDetails;
 import com.cricteam.models.SearchTeam;
 import com.cricteam.models.TeamDetails;
 import com.cricteam.repository.TeamDetailsRepository;
@@ -39,9 +41,21 @@ protected EntityManager entityManager;
 	}
 
 	@Override
-	public TeamDetails getTeamViaTeamId(int userId, int teamId) {
+	public FullTeamDetails getTeamViaTeamId(int userId, int teamId,int ownTeamId) {
+		
 		// TODO Auto-generated method stub
-		return teamDetailsRepository.getTeamDetailsById(userId, teamId);
+		FullTeamDetails fullTeamDetails= new FullTeamDetails();
+		fullTeamDetails.setTeamdetails(teamDetailsRepository.getTeamDetailsById(userId, teamId));
+		List<PlayerDetails> results = entityManager.createNativeQuery("select  * from player_details   where player_details.team_id!=:teamId",PlayerDetails.class)		
+				.setParameter("teamId", teamId)
+				.getResultList();
+		float rating = (float) entityManager.createNativeQuery("SELECT avg(rating) FROM cric_team.team_rating where team_id=:teamId")		
+				.setParameter("teamId", teamId).getSingleResult();
+				
+		
+		fullTeamDetails.setTeamPlayerList(results);
+		fullTeamDetails.setTeamRating(rating);
+		return fullTeamDetails;
 	}
 
 	@Override
@@ -126,6 +140,12 @@ return searchTeamList;
 			int pageNo, int pageSize) {
 		// TODO Auto-generated method stub
 		return getDistanceList(teamRequst.getTeamId(),teamRequst.getUserId(),Double.valueOf(latitude),Double.valueOf(longitude),pageNo,pageSize);
+	}
+
+	@Override
+	public TeamDetails getTeamViaTeamId(int userId, int teamId) {
+		// TODO Auto-generated method stub
+		 return teamDetailsRepository.getTeamDetailsById(userId, teamId);
 	}
 
 }

@@ -68,7 +68,7 @@ public class TeamController {
 	
 	 @RequestMapping(value="/getTeamDetails",method = RequestMethod.GET, produces = "application/json")
 		
-	 public Response getTeamDetails(int teamId,int userId) {
+	 public Response getTeamDetails(int ownTeamId,int teamId,int userId) {
 		 
 		 Response response= new Response();
 	    
@@ -76,7 +76,7 @@ public class TeamController {
 	    	 response.statusCode=HttpURLConnection.HTTP_OK;
 	    	 response.message="sucess";
 	    	 
-	    	 response.data=teamService.getTeamViaTeamId(userId, teamId);
+	    	 response.data=teamService.getTeamViaTeamId(userId, teamId,ownTeamId);
 	   }  
 	    
 	    

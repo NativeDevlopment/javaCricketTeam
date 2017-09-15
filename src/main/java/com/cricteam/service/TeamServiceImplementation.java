@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.cricteam.dao.TeamDetailsDao;
 import com.cricteam.models.FindTeamRequest;
+import com.cricteam.models.FullTeamDetails;
 import com.cricteam.models.SearchTeam;
 import com.cricteam.models.TeamDetails;
 @Service("teamService")
@@ -21,9 +22,9 @@ TeamDetailsDao teamDetailsDao;
        return teamDetailsDao.saveTeam(teamDetails);	}
 
 	@Override
-	public TeamDetails getTeamViaTeamId(int userId, int teamId) {
+	public FullTeamDetails getTeamViaTeamId(int userId, int teamId ,int ownTeamId) {
 		// TODO Auto-generated method stub
-		return teamDetailsDao.getTeamViaTeamId(userId, teamId);
+		return teamDetailsDao.getTeamViaTeamId(userId, teamId,ownTeamId);
 	}
 
 	@Override
@@ -43,6 +44,12 @@ TeamDetailsDao teamDetailsDao;
 			int pageNo, int pageSize) {
 		// TODO Auto-generated method stub
 		return teamDetailsDao.findTeamViaLatLong(teamRequst ,latitude, longitude,pageNo,pageSize);
+	}
+
+	@Override
+	public TeamDetails getTeamViaTeamId(int userId, int teamId) {
+		// TODO Auto-generated method stub
+		 return teamDetailsDao.getTeamViaTeamId(userId, teamId);
 	}
 
 }
