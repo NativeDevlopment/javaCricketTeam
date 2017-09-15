@@ -14,6 +14,7 @@ FullTeamDetails getTeamViaTeamId(int userId,int teamId,int ownTeamId);
 TeamDetails getTeamViaTeamId(int userId,int teamId);
 
 TeamDetails deleteTeam(String userId,String teamId);
-List<SearchTeam> findTeamViaLatLong(String lattiude ,String Longitude,int page_No,int pageSize);
 List<SearchTeam> findTeamViaLatLong(FindTeamRequest teamRequst, String latitude, String longitude, int pageNo,int pageSize);
+List<SearchTeam> findTeamCircle(FindTeamRequest teamRequst, String latitude, String longitude, int pageNo,
+		int pageSize);
 }

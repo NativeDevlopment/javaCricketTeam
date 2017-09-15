@@ -16,9 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cricteam.TeamCircleStatusEnum;
-
+import com.cricteam.exception.ResourceNotFroundException;
 import com.cricteam.models.AddPlayerRequest;
 import com.cricteam.models.FindTeamRequest;
+import com.cricteam.models.PlayerDetails;
 import com.cricteam.models.Response;
 import com.cricteam.models.TeamCircle;
 import com.cricteam.models.TeamCircleRequest;
@@ -66,6 +67,29 @@ public class TeamController {
 	    return response;
 	  }
 	
+	 @RequestMapping(value="/findTeamCircle",method = RequestMethod.POST, produces = "application/json")
+	  @ResponseBody
+	  public Response findTeamCircle(@RequestBody FindTeamRequest teamRequst,int pageNo,int pageSize) {
+		 
+		 Response response= new Response();
+	  
+	    if(teamRequst.getUserId()>0){
+	    try {
+	    	response.message="scuess";
+	      response.data=teamService.findTeamCircle(teamRequst ,teamRequst.getLatitude(), teamRequst.getLongitude(),pageNo,pageSize);
+	      
+	      response.statusCode=HttpURLConnection.HTTP_OK;
+	    }
+	    catch (Exception ex) {
+	    	 response.statusCode=HttpURLConnection.HTTP_INTERNAL_ERROR;
+		      response.message=ex.getStackTrace().toString();
+		      ex.printStackTrace();
+	    }}else{
+	    	 response.statusCode=HttpURLConnection.HTTP_LENGTH_REQUIRED;
+		      response.message="Fields Required.";
+	    }
+	    return response;
+	  }
 	 @RequestMapping(value="/getTeamDetails",method = RequestMethod.GET, produces = "application/json")
 		
 	 public Response getTeamDetails(int ownTeamId,int teamId,int userId) {
@@ -199,6 +223,18 @@ public class TeamController {
 	  }
 	 
 	 
+	 @RequestMapping(value="/updatePlayer",method = RequestMethod.POST, produces = "application/json")
+		
+	 public PlayerDetails updateplayer(@RequestBody PlayerDetails addplayerRequest) {
+		
+		 if(addplayerRequest.getPlayerId()==0){
+				throw new ResourceNotFroundException("User not found with this id");
+
+		 }else{
+			return addplayerService.addPlayer(addplayerRequest); 
+		 }
+		
+	  }
 	 
 	 public  void pushFCMNotification(String data) throws Exception {
 

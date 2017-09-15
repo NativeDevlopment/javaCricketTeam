@@ -33,11 +33,7 @@ TeamDetailsDao teamDetailsDao;
 		return teamDetailsDao.deleteTeam(userId, teamId);
 	}
 
-	@Override
-	public List<SearchTeam> findTeamViaLatLong(String lattiude, String Longitude,int page_No,int pageSize) {
-		// TODO Auto-generated method stub
-		return teamDetailsDao.findTeamViaLatLong(lattiude, Longitude,page_No,pageSize);
-	}
+	
 
 	@Override
 	public List<SearchTeam> findTeamViaLatLong(FindTeamRequest teamRequst, String latitude, String longitude,
@@ -50,6 +46,13 @@ TeamDetailsDao teamDetailsDao;
 	public TeamDetails getTeamViaTeamId(int userId, int teamId) {
 		// TODO Auto-generated method stub
 		 return teamDetailsDao.getTeamViaTeamId(userId, teamId);
+	}
+
+	@Override
+	public List<SearchTeam> findTeamCircle(FindTeamRequest teamRequst, String latitude, String longitude, int pageNo,
+			int pageSize) {
+		// TODO Auto-generated method stub
+		return  teamDetailsDao.findTeamCircle(teamRequst ,latitude, longitude,pageNo,pageSize);
 	}
 
 }
