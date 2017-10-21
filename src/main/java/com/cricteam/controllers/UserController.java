@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cricteam.exception.ResourceNotFroundException;
 import com.cricteam.models.Response;
+import com.cricteam.models.UserCompleteDetails;
 import com.cricteam.models.UserDetails;
 import com.cricteam.service.UserDetailService;
 
@@ -48,10 +49,10 @@ public class UserController {
 	}
 
 	@RequestMapping(value="/getUser",method = RequestMethod.GET, produces = "application/json")
-	public UserDetails getUser(int userId) {
+	public UserCompleteDetails getUser(int userId) {
 		if(userId == 0) {
 			throw new ResourceNotFroundException("User not found with this id");
 		}
-		return userdetailService.getUserViaUserId(userId);
+		return userdetailService.getUserCompleteDetailsViaUserId(userId);
 	}
 }

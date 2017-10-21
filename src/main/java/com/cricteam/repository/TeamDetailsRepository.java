@@ -14,6 +14,9 @@ public interface TeamDetailsRepository<T> extends TeamDetailsBaseRepository<Team
 	TeamDetails getTeamDetailsById(@Param("mid") int mid,@Param ("tid") int tid);
 	@Query("select t from TeamDetails t where t.teamLat =:teamLat and t.teamLong=:teamLong")
 	List<TeamDetails> findTeamViaLatLong(@Param("teamLat") String teamLat ,@Param("teamLong") String teamLong);
+	
+	@Query("select t from TeamDetails t where t.userDetails.userId =:userId")
+	List<TeamDetails> findTeamViaUserId(@Param("userId") int userId);
 	@Query(value = "SELECT  s FROM TeamDetails s WHERE 1 = 1 AND " +
 	        "(pow(69.1 * (s.teamLat - ?1), 2) + pow(69.1 * (?2 - s.teamLong) * cos(s.teamLat / 57.3), 2)) < pow(?3,2)" 
 

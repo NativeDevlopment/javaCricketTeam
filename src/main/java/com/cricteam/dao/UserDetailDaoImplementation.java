@@ -8,7 +8,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cricteam.models.TeamDetails;
+import com.cricteam.models.UserCompleteDetails;
 import com.cricteam.models.UserDetails;
+import com.cricteam.repository.TeamDetailsRepository;
 import com.cricteam.repository.UserRepository;
 
 @Service("userDetailDao")
@@ -17,6 +20,8 @@ import com.cricteam.repository.UserRepository;
 public class UserDetailDaoImplementation implements UserDetailDao {
 	@Autowired 
 	UserRepository<UserDetails> userRepository ;
+	@Autowired 
+	TeamDetailsRepository<TeamDetails> teamDetailsRepositry ;
 	@PersistenceContext
 	protected EntityManager entityManager;
 	
@@ -26,10 +31,13 @@ public class UserDetailDaoImplementation implements UserDetailDao {
 		return userRepository.getUserById(userId);
 	}
 	@Override
-	public UserDetails getUserViaMobileNo(String mobileNo) {
+	public UserCompleteDetails getUserViaMobileNo(String mobileNo) {
 		// TODO Auto-generated method stub
+		UserCompleteDetails completeDetails= new UserCompleteDetails();
+		completeDetails.setUserDetails(userRepository.getUserByPhone(mobileNo));
+		completeDetails.setUserTeamList(teamDetailsRepositry.findTeamViaUserId(completeDetails.getUserDetails().getUserId()));
 		
-		return userRepository.getUserByPhone(mobileNo);
+		return completeDetails;
 	}
 	@Override
 	public UserDetails updateUser(UserDetails userDetails, String userId) {
@@ -88,5 +96,13 @@ public class UserDetailDaoImplementation implements UserDetailDao {
 		}
 		
 		return getExsitingData;
+	}
+	@Override
+	public UserCompleteDetails getUserCompleteDetailsViaUserId(int userId) {
+		// TODO Auto-generated method stub
+		UserCompleteDetails completeDetails= new UserCompleteDetails();
+		completeDetails.setUserDetails(userRepository.getUserById(userId));
+		completeDetails.setUserTeamList(teamDetailsRepositry.findTeamViaUserId(userId));
+		return completeDetails;
 	}
 }

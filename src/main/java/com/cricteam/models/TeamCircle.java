@@ -56,6 +56,22 @@ public class TeamCircle  implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	public String getCreated_time() {
+		return created_time;
+	}
+
+	public void setCreated_time(String created_time) {
+		this.created_time = created_time;
+	}
+
+	public String getUpdated_time() {
+		return updated_time;
+	}
+
+	public void setUpdated_time(String updated_time) {
+		this.updated_time = updated_time;
+	}
+
 	@Id
 	@Column(name="team_circle_id")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -71,7 +87,10 @@ public class TeamCircle  implements Serializable{
 	    @ManyToOne
 		@JoinColumn(name="teamCircleStatusId")
 		private TeamCircleStatusType teamCircleStatusId;
-	  
+	    @Column(name="created_time")
+		private String created_time;
+	    @Column(name="updated_time")
+		private String updated_time;
 public TeamCircle(){
 	
 }

@@ -213,13 +213,42 @@ public class SearchTeam {
 	
 	private String teamLogoUrl;
 	private String teamCircleStatus;
-	 
+	private String createdTime;
+	private String updatedTime;
 	
 	
+	public String getCreatedTime() {
+		return createdTime;
+	}
+
+
+
+
+	public void setCreatedTime(String createdTime) {
+		this.createdTime = createdTime;
+	}
+
+
+
+
+	public String getUpdatedTime() {
+		return updatedTime;
+	}
+
+
+
+
+	public void setUpdatedTime(String updatedTime) {
+		this.updatedTime = updatedTime;
+	}
+
+
+
+
 	@Override
 	public String toString(){
 		 return "{teamId:" + teamId + ", userId:" + userId + ", teamName:"
-				+ teamName + ", teamDesc:" + teamDesc + ", teamLat:" 
+				+ teamName + ", createdTime:" + createdTime+", updatedTime:" + updatedTime+", teamDesc:" + teamDesc + ", teamLat:" 
 				+ teamLat + ", teamAddress:" + teamAddress + ", teamLong:"+ teamLong +", teamLogoUrl:" + teamLogoUrl+", teamCircleStatus:" + teamCircleStatus +", distance: "+distance+"}";
 	}
 }

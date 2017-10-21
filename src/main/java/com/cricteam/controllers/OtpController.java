@@ -1,5 +1,6 @@
 package com.cricteam.controllers;
 
+
 import org.apache.commons.httpclient.util.HttpURLConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,13 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cricteam.models.Otp;
 import com.cricteam.models.Response;
+import com.cricteam.models.UserCompleteDetails;
 import com.cricteam.models.UserDetails;
 import com.cricteam.models.VerifyOtp;
 import com.cricteam.service.OtpService;
 import com.cricteam.service.UserDetailService;
-import com.cricteam.service.UserDetailsServiceImplementation;
 @RestController
 @Controller
+
 public class OtpController {
 	@Autowired
 	OtpService otpService;
@@ -30,12 +32,14 @@ public class OtpController {
 		 Response response= new Response();
 	    Otp otp = null;
 	    String code="";
-	    if(mobileNo.length()>10){
+	    if(mobileNo.length()>=10){
 	    try {
 	      otp = new Otp(mobileNo,"","");
 	      code = otpService.saveOtp(otp);
 	      response.statusCode=HttpURLConnection.HTTP_OK;
 	      response.message="Otp sucessfully sent to Mobile no";
+	      response.data=code;
+
 	    }
 	    catch (Exception ex) {
 	    	 response.statusCode=HttpURLConnection.HTTP_INTERNAL_ERROR;
@@ -43,6 +47,7 @@ public class OtpController {
 	    }}else{
 	    	 response.statusCode=HttpURLConnection.HTTP_LENGTH_REQUIRED;
 		      response.message="Please Enter Valid Mobile No.";
+		      response.data=code;
 	    }
 	    return response;
 	  }
@@ -52,12 +57,12 @@ public class OtpController {
 		 
 		 Response response= new Response();
 	    boolean isNumberVerified;
-	    if(verifyOtp.getMobileNo().length()>10){
+	    if(verifyOtp.getMobileNo().length()>=10){
 	    try {
 	      isNumberVerified = otpService.verifyOtp(verifyOtp);
 	      if(isNumberVerified){
-	    	  UserDetails details=userdetailService.getUserViaMobileNo(verifyOtp.getMobileNo());
-	    	  	if(details!=null&&details.getUserId()!=0){
+	    	  UserCompleteDetails details=userdetailService.getUserViaMobileNo(verifyOtp.getMobileNo());
+	    	  	if(details!=null&&details.getUserDetails()!=null&&details.getUserDetails().getUserId()!=0){
 	    	  		 response.data= details;
 		   	    	  response.statusCode=HttpURLConnection.HTTP_OK;
 		   		      response.message="Number Verified SuccessFully";

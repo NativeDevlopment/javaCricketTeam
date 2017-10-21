@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.cricteam.dao.UserDetailDao;
+import com.cricteam.models.UserCompleteDetails;
 import com.cricteam.models.UserDetails;
 @Service("userDetailService")
 @Repository
@@ -24,7 +25,7 @@ public class UserDetailsServiceImplementation implements UserDetailService {
 	}
 
 	@Override
-	public UserDetails getUserViaMobileNo(String mobileNo) {
+	public UserCompleteDetails getUserViaMobileNo(String mobileNo) {
 		// TODO Auto-generated method stub
 		return userdetailDao.getUserViaMobileNo(mobileNo);
 	}
@@ -39,6 +40,12 @@ public class UserDetailsServiceImplementation implements UserDetailService {
 	public UserDetails updateUserDetails(UserDetails userDetails) {
 		// TODO Auto-generated method stub
 		return userdetailDao.updateUserDetails(userDetails);
+	}
+
+	@Override
+	public UserCompleteDetails getUserCompleteDetailsViaUserId(int userId) {
+		// TODO Auto-generated method stub
+		return userdetailDao.getUserCompleteDetailsViaUserId(userId);
 	}
 
 }

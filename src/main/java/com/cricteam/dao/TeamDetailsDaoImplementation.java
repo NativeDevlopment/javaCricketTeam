@@ -105,7 +105,57 @@ public class TeamDetailsDaoImplementation implements TeamDetailsDao {
 	private String getValueFromArray(Object[] teamRS, int i) {
 		return (teamRS[i]!=null)?teamRS[i].toString():"";
 	}
-	public List<SearchTeam> createTeamObject(List<Object> queryResp){
+	
+	public List<SearchTeam> createTeamObjectSearchTeamList(List<Object> queryResp,int team_id){
+
+		List<SearchTeam> searchTeamList = new ArrayList<SearchTeam>();
+
+		for (Iterator<Object> it = queryResp.iterator(); it.hasNext();) {
+			Object[] teamRS = (Object[]) it.next();
+			/*			[1,"new delhi","crazy 11",28.5275,null,77.0689,"team1",1,0.0,49.40307284026041]
+			 */			SearchTeam searchTeam = new SearchTeam();
+
+			 searchTeam.setTeamId(getValueFromArray(teamRS,0));
+			 searchTeam.setTeamAddress(getValueFromArray(teamRS,1));
+			 searchTeam.setTeamDesc(getValueFromArray(teamRS, 2));
+			 searchTeam.setTeamLat(getValueFromArray(teamRS, 3));
+			 searchTeam.setTeamLogoUrl(getValueFromArray(teamRS, 4));
+			 searchTeam.setTeamLong(getValueFromArray(teamRS, 5));
+			 searchTeam.setTeamName(getValueFromArray(teamRS, 6));
+			 searchTeam.setUserId(getValueFromArray(teamRS, 7));
+
+			 searchTeam.setDistance(getValueFromArray(teamRS, 8));
+			 searchTeam.setTeamRequestId(getValueFromArray(teamRS, 9));
+			 searchTeam.setTeamReceiverId(getValueFromArray(teamRS, 11));
+			 searchTeam.setTeamSenderId(getValueFromArray(teamRS, 12));
+			 searchTeam.setCreatedTime(getValueFromArray(teamRS, 13));
+			 searchTeam.setUpdatedTime(getValueFromArray(teamRS, 14));
+			 if(getValueFromArray(teamRS, 10).equalsIgnoreCase("")){
+				 searchTeam.setTeamCircleStatus("Want Play");
+			 }else if(getValueFromArray(teamRS, 10).equalsIgnoreCase("1")){
+				 continue;
+			 }
+			 else{
+				 if(Integer.valueOf(getValueFromArray(teamRS, 10))==0){
+					 if(team_id==Integer.parseInt(searchTeam.getTeamSenderId()))
+						 searchTeam.setTeamCircleStatus(TeamCircleStatusEnum.values()[Integer.valueOf(getValueFromArray(teamRS, 10))].toString());
+					 else{
+						 searchTeam.setTeamCircleStatus("RECEIVED");
+						 continue;
+					 }
+				 }else{
+					 searchTeam.setTeamCircleStatus(TeamCircleStatusEnum.values()[Integer.valueOf(getValueFromArray(teamRS, 10))].toString());
+
+				 }
+			 }
+
+			 //	searchTeam.set(getValueFromArray(teamRS,2));
+			 searchTeamList.add(searchTeam);
+
+		}
+		return searchTeamList;
+	}
+	public List<SearchTeam> createTeamObject(List<Object> queryResp,int team_id){
 
 		List<SearchTeam> searchTeamList = new ArrayList<SearchTeam>();
 
@@ -132,7 +182,7 @@ public class TeamDetailsDaoImplementation implements TeamDetailsDao {
 				 searchTeam.setTeamCircleStatus("Want Play");
 			 }else{
 				 if(Integer.valueOf(getValueFromArray(teamRS, 10))==0){
-					 if(searchTeam.getTeamId().equals(searchTeam.getTeamSenderId()))
+					 if(team_id==Integer.parseInt(searchTeam.getTeamSenderId()))
 						 searchTeam.setTeamCircleStatus(TeamCircleStatusEnum.values()[Integer.valueOf(getValueFromArray(teamRS, 10))].toString());
 					 else{
 						 searchTeam.setTeamCircleStatus("RECEIVED");
@@ -152,15 +202,25 @@ public class TeamDetailsDaoImplementation implements TeamDetailsDao {
 	public List<SearchTeam> getDistanceList(int team_id,int userId, double lat,double lng ,int page_No,int pageSize) {
 
 		int setFirstResult=(page_No-1)*pageSize;
-		List<Object> results = entityManager.createNativeQuery("select t.*, team_circle.* from (SELECT *, ( 6371 * acos( cos( radians(:lat) ) * cos( radians( team_details.team_lat ) )  * cos( radians(team_details.team_long) - radians(:longitude)) + sin(radians(:lat))"
-				+"  * sin( radians(team_details.team_lat)))) AS distance FROM team_details  HAVING distance < 100 ORDER BY distance) AS t LEFT JOIN cric_team.team_circle  on   cric_team.team_circle.team_sender_id=t.team_id and cric_team.team_circle.team_sender_id=:teamId  where t.user_id!=:userId")		
+		/*List<Object> results = entityManager.createNativeQuery("select t.*, team_circle.* from (SELECT *, ( 6371 * acos( cos( radians(:lat) ) * cos( radians( team_details.team_lat ) )  * cos( radians(team_details.team_long) - radians(:longitude)) + sin(radians(:lat))"
+				+"  * sin( radians(team_details.team_lat)))) AS distance FROM team_details  HAVING distance < 100 ORDER BY distance) AS t  Left JOIN "+
+    "cric_team.team_circle ON (t.team_id = cric_team.team_circle.team_sender_id"+
+        " OR t.team_id = cric_team.team_circle.team_receiver_id)"+
+        " AND (cric_team.team_circle.team_receiver_id = :teamId"+
+        " OR cric_team.team_circle.team_sender_id =:teamId)"+
+"WHERE t.user_id !=:userId")		
 				.setParameter("lat", lat).setParameter("userId", userId).setParameter("teamId", team_id)
 				.setParameter("longitude", lng).setFirstResult(setFirstResult).setMaxResults(pageSize).getResultList();
-		List<SearchTeam> searchTeams=createTeamObject(results);
-
-		
-	
-
+		List<SearchTeam> searchTeams=createTeamObject(results,team_id);*/
+		List<Object> results = entityManager.createNativeQuery("select t.*, team_circle.* from (SELECT *, ( 6371 * acos( cos( radians(:lat) ) * cos( radians( team_details.team_lat ) )  * cos( radians(team_details.team_long) - radians(:longitude)) + sin(radians(:lat))"
+				+"  * sin( radians(team_details.team_lat)))) AS distance FROM team_details  HAVING distance < 100 ORDER BY distance) AS t  Left JOIN "+
+    "cric_team.team_circle ON (t.team_id = cric_team.team_circle.team_receiver_id"+
+       
+        " AND cric_team.team_circle.team_sender_id =:teamId) "+
+"WHERE t.user_id !=:userId")		
+				.setParameter("lat", lat).setParameter("userId", userId).setParameter("teamId", team_id)
+				.setParameter("longitude", lng).setFirstResult(setFirstResult).setMaxResults(pageSize).getResultList();
+		List<SearchTeam> searchTeams=createTeamObjectSearchTeamList(results,team_id);
 		return searchTeams;
 	}
 
@@ -172,7 +232,18 @@ public class TeamDetailsDaoImplementation implements TeamDetailsDao {
 						"  * sin( radians(team_details.team_lat)))) AS distance FROM team_details  HAVING distance < 100 ORDER BY distance) AS t inner join cric_team.team_circle on (t.team_id=cric_team.team_circle.team_sender_id or t.team_id=cric_team.team_circle.team_receiver_id) and (cric_team.team_circle.team_receiver_id=:teamId or  cric_team.team_circle.team_sender_id=:teamId ) where cric_team.team_circle.team_circle_status_id=1 and t.user_id!=:userId")		
 				.setParameter("lat", lat).setParameter("userId", userId).setParameter("teamId", team_id)
 				.setParameter("longitude", lng).setFirstResult(setFirstResult).setMaxResults(pageSize).getResultList();
-		List<SearchTeam> searchTeams=createTeamObject(results);
+		List<SearchTeam> searchTeams=createTeamObject(results,team_id);
+		return searchTeams;
+	}
+	public List<SearchTeam>	getInvitationRequest(int team_id,int userId, double lat,double lng ,int page_No,int pageSize){
+		int setFirstResult=(page_No-1)*pageSize;
+			List<Object> results = entityManager.createNativeQuery(	
+				"select t.*, team_circle.* from (SELECT *, ( 6371 * acos( cos( radians(:lat) ) * cos( radians( team_details.team_lat ) )  * cos( radians(team_details.team_long) - radians(:longitude)) + sin(radians(:lat))"+
+						"  * sin( radians(team_details.team_lat)))) AS distance FROM team_details  HAVING distance < 100 ORDER BY distance) AS t inner join cric_team.team_circle  on cric_team.team_circle.team_sender_id =t.team_id"+ 
+				" WHERE t.user_id !=:userId and cric_team.team_circle.team_receiver_id=:teamId and cric_team.team_circle.team_circle_status_id=0")		
+				.setParameter("lat", lat).setParameter("userId", userId).setParameter("teamId", team_id)
+				.setParameter("longitude", lng).setFirstResult(setFirstResult).setMaxResults(pageSize).getResultList();
+		List<SearchTeam> searchTeams=createTeamObject(results,team_id);
 		return searchTeams;
 	}
 	@Override

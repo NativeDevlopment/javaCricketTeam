@@ -120,12 +120,21 @@ public class TeamController {
 	    	 response.message="sucess";
 	    	 TeamCircle  teamCircle= new TeamCircle();
 	    	 if(circleRequest.getRequestId()!=0){
+	    		 
 		    	 teamCircle=teamCircleService.getTeamCircleDetails(circleRequest.getRequestId());
-		    	 if(circleRequest.getRequestAction().equalsIgnoreCase(TeamCircleStatusEnum.ACCEPT.name())){
+		    	  if(circleRequest.getRequestAction().equalsIgnoreCase("CANCEL")){
+	    			 response.statusCode=HttpURLConnection.HTTP_OK;
+	    			 response.message="You have SuccessFully Cancel Invitaion";
+	    			 teamCircleService.deleteRequest(teamCircle);
+   			    		  return response; 
+	    		 }
+		    	  else if(circleRequest.getRequestAction().equalsIgnoreCase(TeamCircleStatusEnum.ACCEPT.name())){
 		    	 if(teamCircle.getTeamReceiverId().getTeamId()==circleRequest.getReceiverId()){
 		    		
 		    		 if(circleRequest.getRequestAction().equalsIgnoreCase(TeamCircleStatusEnum.ACCEPT.name())){
 		    			 teamCircle.setTeamCircleStatusId(predefinedService.findCircleStatus(TeamCircleStatusEnum.ACCEPT.name())); 
+	    				 teamCircle.setUpdated_time(String.valueOf(System.currentTimeMillis()));
+
 		    			 response.data=teamCircleService.sendRequest(teamCircle);
 		    			 data.addProperty("to", teamCircle.getTeamSenderId().getUserDetails().getDeviceToken());
 		    		        JsonObject info = new JsonObject();
@@ -149,6 +158,8 @@ public class TeamController {
 				    		
 			    		
 			    			 teamCircle.setTeamCircleStatusId(predefinedService.findCircleStatus(TeamCircleStatusEnum.REJECT.name())); 
+		    				 teamCircle.setUpdated_time(String.valueOf(System.currentTimeMillis()));
+
 			    			 response.data=teamCircleService.sendRequest(teamCircle);
 			    		 
 			    		 
@@ -169,7 +180,15 @@ public class TeamController {
 	    	 if(circleRequest.getRequestAction()!=null)
 	    	 {
 	    		 if(circleRequest.getRequestAction().equalsIgnoreCase(TeamCircleStatusEnum.SEND.name())){
-	    			 teamCircle.setTeamCircleStatusId(predefinedService.findCircleStatus(TeamCircleStatusEnum.SEND.name())); 
+	    			 if(teamCircleService.getTeamCircleDetails(circleRequest.getSenderId(), circleRequest.getReceiverId())!=null){
+	    				 response.statusCode=HttpURLConnection.HTTP_CONFLICT;
+	    			      response.message="You have all ready sent invitation.";
+	    			    		  return response;
+	    			 }else{
+	    				 teamCircle.setCreated_time(String.valueOf(System.currentTimeMillis()));
+	    				 teamCircle.setUpdated_time(String.valueOf(System.currentTimeMillis()));
+
+	    				 teamCircle.setTeamCircleStatusId(predefinedService.findCircleStatus(TeamCircleStatusEnum.SEND.name())); 
 	    		TeamCircle result=	 teamCircleService.sendRequest(teamCircle);
 	    			 response.data=result;
 	    		        data.addProperty("to", result.getTeamReceiverId().getUserDetails().getDeviceToken());
@@ -181,7 +200,7 @@ public class TeamController {
 	    		        info.addProperty("senderTeamId",  result.getTeamSenderId().getTeamId());
 	    		        info.addProperty("type", "request");
 	    		        info.addProperty("senderUserId",  result.getTeamSenderId().getUserDetails().getUserId());// Notification body
-	    		        data.add("data", info);
+	    		        data.add("data", info);}
 	    		 }
 	    	 }
 	    	
@@ -211,7 +230,7 @@ public class TeamController {
 	    try {
 	    	 response.statusCode=HttpURLConnection.HTTP_OK;
 	    	 response.message="sucess";
-	    	  response.data=addplayerService.addPlayers(addplayerRequest.getPlayerList());
+	    	  response.data=addplayerService.addPlayers(addplayerRequest.getPlayerList(),addplayerRequest.getTeamId());
 	    
 	    }
 	    catch (Exception ex) {
@@ -274,7 +293,7 @@ public class TeamController {
 	    }
 
 
-	 @RequestMapping(value="/SaveTeam",method = RequestMethod.POST, produces = "application/json")
+	 @RequestMapping(value="/saveTeam",method = RequestMethod.POST, produces = "application/json")
 		public Response SaveTeam(@RequestBody TeamRequest teamRequest) {
 
 			Response response= new Response();
